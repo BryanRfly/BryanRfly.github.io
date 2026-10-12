@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Greeting Card </title>
+
+<link href="https://fonts.googleapis.com/css2?family=Homemade+Apple&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #100f20;
+  --panel: #1b1930;
+  --rose: #d9a7b0;
+  --gold: #d8bd8a;
+  --text: #f8edf0;
+  --muted: #b8afc4;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  background:
+    radial-gradient(ellipse at 15% 10%, #32213e 0%, transparent 42%),
+    radial-gradient(ellipse at 90% 80%, #202b46 0%, transparent 40%),
+    var(--bg);
+}
+
+button {
+  font: inherit;
+}
+
+button:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
+}
+
+/* LATAR BELAKANG */
+
+.stars {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.star {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #fff1d2;
+  opacity: .5;
+  animation: twinkle 3s infinite ease-in-out;
+}
+
+@keyframes twinkle {
+  0%, 100% {
+    opacity: .15;
+    transform: scale(.8);
+  }
+  50% {
+    opacity: .8;
+    transform: scale(1.4);
+  }
+}
+
+/* HEADER */
+
+header {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1100px;
+  margin: auto;
+  padding: 24px 22px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.music-button {
+  border: 1px solid #ffffff30;
+  background: #ffffff0b;
+  color: var(--text);
+  padding: 10px 15px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: .25s;
+}
+
+.music-button:hover {
+  background: #ffffff18;
+  border-color: var(--gold);
+}
+
+/* HALAMAN DEPAN */
+
+main {
+  position: relative;
+  z-index: 1;
+}
+
+.hero {
+  min-height: 82vh;
+  padding: 45px 20px 70px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  animation: fadeUp .9s ease both;
+}
+
+.eyebrow {
+  color: var(--gold);
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(36px, 7vw, 64px);
+  font-weight: 500;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+
+h1 span {
+  color: var(--rose);
+  font-style: italic;
+}
+
+.subtitle {
+  color: var(--muted);
+  font-size: 14px;
+  margin-bottom: 36px;
+}
+
+/* AMPLOP */
+
+.envelope-stage {
+  position: relative;
+  width: min(320px, 82vw);
+  height: 215px;
+  cursor: pointer;
+  perspective: 900px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: transform .10s ease;
+}
+
+.envelope-stage:active {
+  transform: scale(.98);
+}
+
+.envelope-stage:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 8px;
+  border-radius: 5px;
+}
+
+.envelope {
+  position: absolute;
+  inset: 20px 0 0;
+  height: 180px;
+  background: linear-gradient(145deg, #6e455f, #3c2b49);
+  border: 1px solid #d9a7b055;
+  border-radius: 5px;
+  box-shadow: 0 25px 70px #00000055;
+}
+
+.envelope::before,
+.envelope::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.envelope::before {
+  background: linear-gradient(145deg, #a06d7c, #64415f);
+  clip-path: polygon(0 0, 50% 58%, 100% 0);
+  transform-origin: top;
+  transition: transform 5s ease, opacity .4s ease;
+  z-index: 4;
+}
+
+.envelope::after {
+  background: linear-gradient(135deg, #58354f, #39283f);
+  clip-path: polygon(0 100%, 50% 45%, 100% 100%);
+  z-index: 3;
+}
+
+.letter-preview {
+  position: absolute;
+  left: 8%;
+  top: 10px;
+  width: 84%;
+  height: 150px;
+  padding: 24px 12px;
+  border-radius: 3px;
+  background: linear-gradient(145deg, #fff9ef, #ead9d6);
+  color: #493547;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: transform 5s ease;
+  z-index: 2;
+  box-shadow: 0 3px 15px #00000020;
+}
+
+.letter-preview small {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #87667a;
+}
+
+.letter-preview strong {
+  font-family: 'Homemade Apple', cursive;
+  font-size: 22px;
+  font-weight: 400;
+}
+
+.seal {
+  position: absolute;
+  z-index: 5;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  left: 50%;
+  top: 100px;
+  transform: translateX(-50%);
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #e5c6a1, #b98b65);
+  color: #5b3546;
+  font-size: 17px;
+  box-shadow: 0 4px 12px #00000030;
+  transition: opacity .3s ease, transform .3s ease;
+}
+
+.envelope-stage.open .envelope::before {
+  transform: rotateX(180deg);
+  opacity: 0;
+}
+
+.envelope-stage.open .letter-preview {
+  transform: translateY(-90px);
+  transition-delay: .1s;
+}
+
+.envelope-stage.open .seal {
+  opacity: 0;
+  transform: translateX(-50%) scale(.5);
+}
+
+/* TOMBOL BUKA SURAT */
+
+.open-button {
+  margin-top: 36px;
+  border: 1px solid var(--gold);
+  color: var(--bg);
+  background: linear-gradient(135deg, #e4c99e, #c7a779);
+  border-radius: 30px;
+  padding: 13px 27px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 25px #d8bd8a20;
+  transition: transform .2s, box-shadow .2s;
+}
+
+.open-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px #d8bd8a30;
+}
+
+.open-button:disabled {
+  opacity: .7;
+  cursor: default;
+}
+
+.hint {
+  margin-top: 14px;
+  color: #a9a0b8;
+  font-size: 11px;
+}
+
+/* ISI SURAT */
+
+.letter-section {
+  display: none;
+  width: min(680px, calc(100% - 32px));
+  margin: 0 auto 60px;
+  padding: 30px;
+  border: 1px solid #ffffff17;
+  border-radius: 18px;
+  background: linear-gradient(145deg, #ffffff0b, #ffffff04);
+  box-shadow: 0 25px 80px #00000025;
+  animation: fadeUp .8s ease both;
+}
+
+.letter-section.visible {
+  display: block;
+}
+
+.letter-top {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.letter-top h1 {
+  font-size: clamp(30px, 5vw, 42px);
+}
+
+/* FOTO */
+
+.photo {
+  width: 100%;
+  height: 300px;
+  display: block;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 27px;
+  background: #292238;
+}
+
+/* TEKS UCAPAN */
+
+.message {
+  color: #e8dfeb;
+  font-size: 14px;
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+}
+
+.message p {
+  margin-bottom: 17px;
+}
+
+/* KURSOR MENGETIK */
+
+.message .typewriter-text {
+  visibility: hidden;
+}
+
+.message .typewriter-text.typing,
+.message .typewriter-text.typed {
+  visibility: visible;
+}
+
+.message .typing-cursor::after {
+  content: "|";
+  display: inline-block;
+  color: var(--gold);
+  margin-left: 2px;
+  animation: blinkCursor .300s steps(1) infinite;
+}
+
+@keyframes blinkCursor {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* KUTIPAN */
+
+.message .highlight {
+  color: var(--rose);
+  font-family: 'Playfair Display', serif;
+  font-size: 21px;
+  font-style: italic;
+  line-height: 1.7;
+  text-align: center;
+  margin: 25px 0;
+}
+
+/* TANDA TANGAN */
+
+.signature {
+  margin-top: 28px;
+  text-align: right;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.signature strong {
+  display: block;
+  margin-top: 12px;
+  color: var(--gold);
+  font-family: 'Homemade Apple', cursive;
+  font-size: 25px;
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* TOMBOL KEMBALI */
+
+.back-button {
+  display: block;
+  margin: 28px auto 0;
+  padding: 10px 20px;
+  border-radius: 30px;
+  border: 1px solid #ffffff35;
+  color: var(--text);
+  background: #ffffff08;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+/* FOOTER */
+
+footer {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  color: #91889e;
+  font-size: 11px;
+  padding: 0 20px 25px;
+}
+
+/* ANIMASI HALAMAN */
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* TAMPILAN HP */
+
+@media (max-width: 480px) {
+  header {
+    padding: 18px 16px;
+  }
+
+  .hero {
+    min-height: 78vh;
+    padding-top: 25px;
+  }
+
+  .letter-section {
+    padding: 20px;
+  }
+
+  .photo {
+    height: 230px;
+  }
+
+  .message {
+    font-size: 13px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="stars" id="stars"></div>
+
+<header>
+  <button class="music-button" id="musicButton" type="button">
+    ♫ Putar musik
+  </button>
+</header>
+
+<main>
+
+  <!-- HALAMAN DEPAN -->
+  <section class="hero" id="hero">
+
+    <h1>Untuk <span>Farhan</span></h1>
+
+    <p class="eyebrow">Ada pesan nih buat luuu.</p>
+
+    <div
+      class="envelope-stage"
+      id="envelope"
+      role="button"
+      tabindex="0"
+      aria-label="Buka surat dari Bryan"
+    >
+      <div class="envelope">
+        <div class="letter-preview">
+          <small>FROM: BRYAN</small>
+          <strong>To: Farhan </strong>
+        </div>
+      </div>
+
+      <div class="seal">❤️</div>
+    </div>
+
+    <button class="open-button" id="openButton" type="button">
+      Buka surat 
+    </button>
+
+    <p class="hint" id="openLabel">
+      Ketuk amplop untuk membuka
+    </p>
+
+  </section>
+
+  <!-- ISI SURAT -->
+  <section class="letter-section" id="letter">
+
+    <div class="letter-top">
+      <h1><span>Thank You!</span></h1>
+    </div>
+
+    <img
+      class="photo"
+      src="fotokitablur.jpg"
+      alt="Pemandangan hangat saat matahari terbit"
+      onerror="this.style.display='none'"
+    >
+
+    <div class="message">
+
+      <p>Hai, Farhan.</p>
+
+      <p>
+        makasih ya udah jadi bagian dari perjalanan PEPCI 2026 dan udah memberikan kontribusimu selama ini. Walaupun lu sering telat dan terkadang nyebelin, wkwk, tapi gw tetep menghargai setiap usaha dan hal yang udah lu berikan buat PEPCI.
+      </p>
+      <p>
+        Mungkin selama perjalanan ini ada banyak hal yang bikin kita capek, emosi, atau beda pendapat, tapi pada akhirnya kita sama-sama berusaha menyelesaikan apa yang udah dimulai. Terima kasih karena lu tetep ikut berproses dan memberikan bagianmu dalam perjalanan ini.
+      </p>
+
+      <p>
+        gw juga mau minta maaf kalau selama ini gw sering marah ke lu, atau ada perkataan dan perbuatanku yang kurang enak di hati lu. Mungkin ada sikapku yang tanpa sadar bikin lu sedih atau ngga nyaman. gw minta maaf, ya. gw sadar gw juga masih banyak kurangnya
+      </p>
+
+      <p class="highlight">
+        “Setiap orang punya kekurangan dan kelebihannya masing-masing. Yang terpenting bukan menjadi sempurna, tetepi tetep mau belajar, bertanggung jawab, dan memberikan yang terbaik.”
+      </p>
+
+      <p>
+        Semoga ke depannya lu bisa lebih menghargai waktu dan terus berkembang jadi pribadi yang lebih baik. Sekali lagi, terima kasih atas semua kontribusimu di PEPCI 2026, Han. Semoga semua pengalaman ini bisa jadi pelajaran berharga buat perjalananmu selanjutnya. tetep semangat!.
+      </p>
+
+      <p>
+        Sekali lagi, terima kasih udah menjadi lu.
+      </p>
+
+    </div>
+
+    <div class="signature">
+      Best Regards,
+      <strong>Bryan </strong>
+    </div>
+
+    <button class="back-button" id="backButton" type="button">
+      Kembali ke amplop
+    </button>
+
+  </section>
+
+</main>
+
+<footer>
+  Made with ❤️
+</footer>
+
+<!-- MUSIK
+     Simpan file musik bernama ramai.mp3
+     di folder yang sama dengan index.html.
+-->
+<audio id="player" loop preload="none">
+  <source src="ramai.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const envelope = document.getElementById("envelope");
+const openButton = document.getElementById("openButton");
+const openLabel = document.getElementById("openLabel");
+const hero = document.getElementById("hero");
+const letter = document.getElementById("letter");
+const backButton = document.getElementById("backButton");
+const player = document.getElementById("player");
+const musicButton = document.getElementById("musicButton");
+const stars = document.getElementById("stars");
+
+let isOpened = false;
+let isBusy = false;
+let typingRunId = 0;
+
+/* BINTANG DI LATAR BELAKANG */
+
+for (let i = 0; i < 45; i++) {
+  const star = document.createElement("span");
+
+  star.className = "star";
+  star.style.left = Math.random() * 100 + "%";
+  star.style.top = Math.random() * 100 + "%";
+  star.style.animationDelay = Math.random() * 4 + "s";
+  star.style.animationDuration =
+    (2 + Math.random() * 3) + "s";
+
+  stars.appendChild(star);
+}
+
+/* MUSIK */
+
+async function playMusic() {
+  try {
+    await player.play();
+    musicButton.textContent = "♫ Musik diputar";
+  } catch (error) {
+    musicButton.textContent = "♫ Tekan untuk memutar";
+  }
+}
+
+function pauseMusic() {
+  player.pause();
+  musicButton.textContent = "♫ Putar musik";
+}
+
+musicButton.addEventListener("click", () => {
+  if (player.paused) {
+    playMusic();
+  } else {
+    pauseMusic();
+  }
+});
+
+player.addEventListener("play", () => {
+  musicButton.textContent = "♫ Musik diputar";
+});
+
+player.addEventListener("pause", () => {
+  musicButton.textContent = "♫ Putar musik";
+});
+
+/* EFEK MENGETIK */
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function typeMessage() {
+  // Menghentikan animasi sebelumnya jika ada
+  const runId = ++typingRunId;
+  const paragraphs = document.querySelectorAll(".message p");
+
+  // Simpan teks asli dan kosongkan teks yang ditampilkan
+  paragraphs.forEach(p => {
+    if (!p.dataset.originalText) {
+      p.dataset.originalText = p.textContent.trim();
+    }
+
+    p.textContent = "";
+    p.classList.remove(
+      "typing",
+      "typed",
+      "typing-cursor"
+    );
+    p.classList.add("typewriter-text");
+  });
+
+  // Ketik setiap paragraf secara berurutan
+  for (const p of paragraphs) {
+    if (runId !== typingRunId) return;
+
+    const originalText = p.dataset.originalText;
+
+    p.classList.add("typing", "typing-cursor");
+
+    for (let i = 0; i < originalText.length; i++) {
+      if (runId !== typingRunId) return;
+
+      p.textContent = originalText.slice(0, i + 1);
+
+      // Kecepatan mengetik per karakter
+      await sleep(70);
+    }
+
+    p.classList.remove("typing", "typing-cursor");
+    p.classList.add("typed");
+
+    // Jeda sebelum paragraf selanjutnya
+    await sleep(500);
+  }
+}
+
+/* MEMBUKA SURAT */
+
+function openLetter() {
+  if (isBusy || isOpened) return;
+
+  isBusy = true;
+  openButton.disabled = true;
+  openLabel.textContent = "Membuka surat...";
+
+  // Mencoba memutar musik setelah interaksi pengguna
+  if (player.paused) {
+    playMusic();
+  }
+
+  envelope.classList.add("open");
+
+  setTimeout(() => {
+    hero.style.display = "none";
+    letter.classList.add("visible");
+
+    isOpened = true;
+    isBusy = false;
+    openButton.disabled = false;
+
+    // Mulai animasi mengetik setelah surat muncul
+    typeMessage();
+
+    letter.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }, 1900);
+}
+
+openButton.addEventListener("click", openLetter);
+envelope.addEventListener("click", openLetter);
+
+envelope.addEventListener("keydown", event => {
+  if (event.key === "Enter" || event.key === " ") {
+    event.preventDefault();
+    openLetter();
+  }
+});
+
+/* KEMBALI KE AMPLOP */
+
+backButton.addEventListener("click", () => {
+  if (isBusy) return;
+
+  // Batalkan animasi mengetik yang sedang berlangsung
+  typingRunId++;
+
+  letter.classList.remove("visible");
+  envelope.classList.remove("open");
+
+  hero.style.display = "flex";
+  openLabel.textContent = "Ketuk amplop untuk membuka";
+
+  isOpened = false;
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+});
+</script>
+
+</body>
+</html>
