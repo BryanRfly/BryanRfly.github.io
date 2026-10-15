@@ -1,0 +1,977 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#180d14">
+  <title>Buat Enjel Sayangg</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #180d14;
+      --bg-light: #24131e;
+      --wine: #792d4b;
+      --rose: #d99aab;
+      --gold: #d6b88b;
+      --cream: #f7eee8;
+      --muted: #bca8b0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--cream);
+      font-family: "DM Sans", sans-serif;
+      overflow-x: hidden;
+    }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+    }
+
+    button:focus-visible,
+    a:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 5px;
+    }
+
+    .background-glow {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse at 15% 15%, #792d4b35, transparent 45%),
+        radial-gradient(ellipse at 85% 65%, #d6b88b12, transparent 40%);
+    }
+
+    .topbar {
+      position: absolute;
+      z-index: 5;
+      top: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 25px clamp(20px, 6vw, 85px);
+    }
+
+    .brand {
+      color: var(--gold);
+      font-size: 11px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+
+    .music-control {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--cream);
+      background: #ffffff08;
+      border: 1px solid #ffffff20;
+      border-radius: 30px;
+      padding: 10px 15px;
+      font-size: 11px;
+      letter-spacing: 1px;
+      transition: 0.3s;
+    }
+
+    .music-control:hover {
+      border-color: var(--gold);
+    }
+
+    .music-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--gold);
+    }
+
+    .music-control.playing .music-dot {
+      animation: pulse 1.4s infinite;
+    }
+
+    .hero {
+      position: relative;
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 115px 22px 80px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 280px;
+      height: 280px;
+      border: 1px solid #d6b88b20;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .hero::before {
+      width: 430px;
+      height: 430px;
+    }
+
+    .hero::after {
+      width: 540px;
+      height: 540px;
+      border-color: #d6b88b10;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      animation: fade-up 1.3s ease both;
+    }
+
+    .eyebrow {
+      color: var(--gold);
+      font-size: 10px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+
+    .hero h1 {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(58px, 11vw, 112px);
+      font-weight: 500;
+      line-height: 0.95;
+      letter-spacing: -2px;
+      margin-bottom: 25px;
+    }
+
+    .hero h1 span {
+      display: block;
+      color: var(--rose);
+      font-style: italic;
+    }
+
+    .hero-description {
+      max-width: 440px;
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 2;
+      font-weight: 300;
+    }
+
+    .gold-line {
+      display: block;
+      width: 55px;
+      height: 1px;
+      margin: 28px auto;
+      background: var(--gold);
+    }
+
+    .primary-button,
+    .outline-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      min-height: 47px;
+      padding: 0 23px;
+      font-size: 11px;
+      letter-spacing: 1px;
+      border-radius: 3px;
+      transition: 0.3s;
+      text-decoration: none;
+    }
+
+    .primary-button {
+      color: #24131e;
+      background: var(--gold);
+      border: 1px solid var(--gold);
+    }
+
+    .primary-button:hover {
+      background: var(--cream);
+      border-color: var(--cream);
+      transform: translateY(-2px);
+    }
+
+    .outline-button {
+      color: var(--cream);
+      background: transparent;
+      border: 1px solid #ffffff30;
+    }
+
+    .outline-button:hover {
+      border-color: var(--rose);
+      color: var(--rose);
+    }
+
+    .hero-buttons {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 34px;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 25px;
+      color: #bca8b080;
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    .section {
+      width: min(1000px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 100px 0;
+    }
+
+    .section-heading {
+      text-align: center;
+      margin-bottom: 45px;
+    }
+
+    .section-heading .eyebrow {
+      margin-bottom: 14px;
+    }
+
+    .section-heading h2 {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(38px, 6vw, 57px);
+      font-weight: 500;
+    }
+
+    .section-heading p {
+      max-width: 460px;
+      margin: 13px auto 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.9;
+    }
+
+    .story-card {
+      display: grid;
+      grid-template-columns: 0.8fr 1.2fr;
+      border: 1px solid #ffffff12;
+      background: linear-gradient(135deg, #ffffff06, #ffffff02);
+    }
+
+    .story-side {
+      min-height: 300px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      text-align: center;
+      padding: 0 0 28px;
+      background:
+        radial-gradient(ellipse at center, #792d4b35, transparent 70%);
+      border-right: 1px solid #ffffff12;
+      overflow: hidden;
+    }
+
+    .favorite-photo {
+      display: block;
+      position: relative;
+      inset: auto;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      height: auto;
+      object-fit: cover;
+      opacity: 1;
+      z-index: 0;
+    }
+
+    .story-number {
+      font-family: "Cormorant Garamond", serif;
+      color: var(--gold);
+      font-size: 82px;
+      line-height: 1;
+      margin-top: 22px;
+    }
+
+    .story-side p {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    .story-text {
+      align-self: center;
+      padding: clamp(28px, 6vw, 60px);
+    }
+
+    .story-text h3 {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 34px;
+      font-weight: 500;
+      margin-bottom: 22px;
+    }
+
+    .story-text p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 2.1;
+      margin-bottom: 15px;
+    }
+
+    .signature {
+      color: var(--rose) !important;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 24px !important;
+      font-style: italic;
+      margin-top: 20px;
+    }
+
+    .letter-panel {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: clamp(25px, 7vw, 65px);
+      text-align: center;
+      border: 1px solid #d6b88b35;
+      background: linear-gradient(145deg, #ffffff08, #ffffff02);
+      position: relative;
+    }
+
+    .letter-panel::before {
+      content: "LOVE LETTER";
+      position: absolute;
+      top: 17px;
+      left: 0;
+      right: 0;
+      color: #d6b88b80;
+      font-size: 8px;
+      letter-spacing: 4px;
+    }
+
+    .letter-symbol {
+      color: var(--rose);
+      font-size: 30px;
+      margin: 20px 0;
+    }
+
+    .letter-panel h3 {
+      font-family: "Cormorant Garamond", serif;
+      font-weight: 500;
+      font-size: 35px;
+      margin-bottom: 15px;
+    }
+
+    .letter-panel > p {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 2;
+    }
+
+    #loveLetter {
+      display: none;
+      margin-top: 30px;
+      padding-top: 25px;
+      border-top: 1px solid #ffffff15;
+      text-align: left;
+      animation: fade-up 0.7s ease both;
+    }
+
+    #loveLetter.show {
+      display: block;
+    }
+
+    #loveLetter p {
+      color: #dfcfd5;
+      font-family: "Cormorant Garamond", serif;
+      font-size: 21px;
+      line-height: 1.8;
+      margin-bottom: 17px;
+    }
+
+    .letter-actions {
+      margin-top: 28px;
+    }
+
+    .memories {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .memory {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid #ffffff12;
+      background: #ffffff04;
+      transition: 0.4s;
+    }
+
+    .memory-photo {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      height: auto;
+      object-fit: cover;
+      opacity: 1;
+      position: relative;
+      inset: auto;
+      z-index: 0;
+      transition: transform 0.4s;
+    }
+
+    .memory::after {
+      content: none;
+    }
+
+    .memory:hover {
+      transform: translateY(-5px);
+      border-color: #d6b88b50;
+    }
+
+    .memory:hover .memory-photo {
+      transform: scale(1.02);
+    }
+
+    .memory-caption {
+      padding: 18px 20px 22px;
+      text-align: center;
+      background: #1d1019;
+    }
+
+    .memory-index {
+      color: var(--gold);
+      font-family: "Cormorant Garamond", serif;
+      font-size: 30px;
+      margin-bottom: 8px;
+    }
+
+    .memory h3 {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 25px;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .memory p {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.8;
+    }
+
+    .memory-note {
+      margin-top: 22px;
+      text-align: center;
+      color: #bca8b080;
+      font-size: 11px;
+      line-height: 1.9;
+    }
+
+    .final-section {
+      text-align: center;
+      padding: 110px 20px 125px;
+      background:
+        radial-gradient(ellipse at center, #792d4b30, transparent 65%);
+    }
+
+    .final-section h2 {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(42px, 7vw, 70px);
+      font-weight: 500;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+
+    .final-section h2 span {
+      color: var(--rose);
+      font-style: italic;
+    }
+
+    .final-section p {
+      max-width: 440px;
+      margin: 0 auto 30px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 2;
+    }
+
+    footer {
+      border-top: 1px solid #ffffff10;
+      padding: 24px 20px;
+      text-align: center;
+      color: #bca8b080;
+      font-size: 10px;
+      letter-spacing: 1px;
+    }
+
+    .toast {
+      position: fixed;
+      z-index: 20;
+      left: 50%;
+      bottom: 25px;
+      width: max-content;
+      max-width: calc(100% - 36px);
+      padding: 15px 20px;
+      color: var(--cream);
+      background: #2b1723;
+      border: 1px solid #d6b88b60;
+      font-size: 12px;
+      line-height: 1.7;
+      text-align: center;
+      opacity: 0;
+      transform: translate(-50%, 20px);
+      pointer-events: none;
+      transition: 0.35s;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    .floating-heart {
+      position: fixed;
+      z-index: 15;
+      bottom: -25px;
+      pointer-events: none;
+      color: var(--rose);
+      animation: float-up 4.5s ease-out forwards;
+    }
+
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(22px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      50% { opacity: 0.3; transform: scale(0.7); }
+    }
+
+    @keyframes float-up {
+      to {
+        transform: translateY(-110vh) rotate(25deg);
+        opacity: 0;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .topbar {
+        padding: 20px;
+      }
+
+      .brand {
+        font-size: 9px;
+        letter-spacing: 2px;
+      }
+
+      .music-control {
+        padding: 9px 11px;
+        font-size: 9px;
+      }
+
+      .hero h1 {
+        letter-spacing: -1px;
+      }
+
+      .section {
+        padding: 70px 0;
+      }
+
+      .story-card {
+        grid-template-columns: 1fr;
+      }
+
+      .story-side {
+        min-height: 170px;
+        border-right: 0;
+        border-bottom: 1px solid #ffffff12;
+      }
+
+      .story-number {
+        font-size: 65px;
+      }
+
+      .memories {
+        grid-template-columns: 1fr;
+      }
+
+      .memory-photo {
+        aspect-ratio: 16 / 9;
+      }
+
+      .final-section {
+        padding: 80px 20px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="background-glow"></div>
+
+  <header class="topbar">
+    <div class="brand"></div>
+
+    <button class="music-control" id="musicButton" type="button">
+      <span class="music-dot"></span>
+      <span id="musicLabel">Putar Musik</span>
+    </button>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <p class="eyebrow">A story written with love</p>
+
+        <h1>For My <span>Enjel Sayangg</span></h1>
+
+        <span class="gold-line"></span>
+
+        <p class="hero-description">
+          Dari banyaknya hal indah di dunia, mengenal kamu
+          adalah salah satu hal yang paling aku syukuri.
+          Halaman ini kecil, tapi perasaanku untukmu begitu besar.
+        </p>
+
+        <div class="hero-buttons">
+          <button class="primary-button" id="startButton" type="button">
+            Baca Cerita Kita <span>↗</span>
+          </button>
+
+          <button class="outline-button" id="surpriseButton" type="button">
+            Pesan Rahasia
+          </button>
+        </div>
+      </div>
+
+      <div class="scroll-hint">A little further down ↓</div>
+    </section>
+
+    <section class="section" id="story">
+      <div class="section-heading">
+        <p class="eyebrow">Chapter one</p>
+        <h2>Untuk Seseorang yang Istimewa</h2>
+        <p>
+          engga semua hal indah harus megah.
+          Terkadang, seseorang saja sudah cukup membuat hari terasa berbeda.
+        </p>
+      </div>
+
+      <div class="story-card">
+        <div class="story-side">
+           <img class="favorite-photo" src="favorite.jpeg" alt="Foto My favorite person" onerror="this.style.display='none'">
+          <div class="story-number">01</div>
+          <p>My favorite person</p>
+        </div>
+
+        <div class="story-text">
+          <h3>Dear, Enjel Sayangg.</h3>
+
+         <p>
+            Aku suka bagaimana hal sederhana bisa terasa lebih menyenangkan
+            ketika ada kamu di dalamnya. Cerita kecil, obrolan biasa,
+            sampai momen ketika kita hanya saling menemani.
+          </p>
+
+          <p>
+            Aku engga bisa menjanjikan bahwa setiap hari akan selalu mudah.
+            Tapi aku ingin belajar memahami kamu, mendengarkan kamu,
+            dan menghargai hal-hal yang membuatmu menjadi dirimu sendiri.
+          </p>
+
+          <p>
+            Terima kasih udah menjadi bagian dari ceritaku.
+            Semoga kita terus punya alasan untuk tersenyum,
+            bertumbuh, dan menciptakan kenangan yang layak dikenang.
+          </p>
+
+          <p class="signature">With all my love.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="letterSection">
+      <div class="section-heading">
+        <p class="eyebrow">Chapter two</p>
+        <h2>A Letter For You</h2>
+        <p>
+          Ada hal-hal yang terkadang lebih mudah disampaikan lewat tulisan.
+          Ini salah satunya.
+        </p>
+      </div>
+
+      <div class="letter-panel">
+        <div class="letter-symbol">✉</div>
+        <h3>Untuk Enjel Sayangg</h3>
+        <p>Sebuah surat kecil, ditulis dengan perasaan yang tulus.</p>
+
+        <div id="loveLetter">
+          <p>Hai, sayangku.</p>
+          <p>
+            Kalau suatu hari kamu merasa lelah, aku harap kamu ingat
+            bahwa kamu engga harus selalu terlihat kuat. Kamu boleh
+            beristirahat, bercerita, atau sekedar menikmati waktu untuk diri sendiri.
+          </p>
+
+
+          <p>
+            Aku menyayangimu bukan karena kamu harus selalu sempurna,
+            tetapi karena kamu adalah kamu. Aku ingin mengenal lebih banyak
+            tentang pikiranmu, impianmu, ketakutanmu, dan hal-hal kecil
+            yang membuatmu bahagia.
+          </p>
+
+          <p>
+            Aku ingin kita menjadi dua orang yang bisa saling mendukung,
+            bukan saling membatasi. Dua orang yang berani berbicara saat
+            ada masalah, mau meminta maaf saat salah, dan tetap saling
+            menghormati meski tidak selalu sepakat.
+          </p>
+
+          <p>
+            Jika waktu terus berjalan, aku harap kita tetap bisa
+            menemukan kebahagiaan dalam hal-hal sederhana:
+            percakapan kecil, tawa yang tidak direncanakan,
+            dan kehadiran yang membuat hati terasa tenang.
+          </p>
+
+          <p>
+            Terima kasih udah hadir dalam hidupku, Enjel.
+            Aku engga tau semua hal yang menunggu kita di depan,
+            tetapi aku ingin menjalaninya dengan ketulusan dan usaha yang nyata.
+          </p>
+
+          <p class="signature">Selalu ada tempat istimewa untukmu di hatiku.</p>
+        </div>
+
+        <div class="letter-actions">
+          <button class="primary-button" id="letterButton" type="button">
+            Buka Surat ♡
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="memories">
+      <div class="section-heading">
+        <p class="eyebrow">Chapter three</p>
+        <h2>Little Things, Big Feelings</h2>
+        <p>
+          Beberapa hal yang selalu aku ingat tentang kita.
+        </p>
+      </div>
+
+      <div class="memories">
+        <article class="memory">
+          <img class="memory-photo" src="Conversations.jpeg" alt="QR Code Scan Me Mas Al" loading="lazy" onerror="this.style.display='none'">
+          <div class="memory-caption">
+            <div class="memory-index">01</div>
+            <h3>First Time Fotbar</h3>
+            <p>First time fotbar sama kamu rasanya campur aduk banget, masi malu maluw</p>
+          </div>
+        </article>
+          
+        <article class="memory">
+          <img class="memory-photo" src="Laughter.jpeg" alt="QR Code Scan Me Farhan" loading="lazy" onerror="this.style.display='none'">
+          <div class="memory-caption">
+            <div class="memory-index">02</div>
+            <h3>Inian Date</h3>
+            <p>Maklum kita blm official jdi klo main nyari tempat yg aman wkwkwk</p>
+          </div>
+        </article>
+
+        <article class="memory">
+          <img class="memory-photo" src="Little World.jpeg" alt="QR Code Scan Me Kak Amel" loading="lazy" onerror="this.style.display='none'">
+          <div class="memory-caption">
+            <div class="memory-index">03</div>
+            <h3>First Time Ke T4 Fav enjek</h3>
+            <p>Beberapa kali aku minta ke kamu buat diajak ke tempat favoritmu dan yep,akhirnya bisa kesana</p>
+          </div>
+        </article>
+      </div>
+
+    </section>
+
+    <section class="final-section">
+      <p class="eyebrow">One last thing</p>
+
+      <h2>My heart is happy<br>to know <span>you.</span></h2>
+
+      <p>
+        Kalau ada satu hal yang ingin aku pastikan kamu tau,
+        itu adalah betapa berharganya kamu bagiku.
+        Semoga halaman kecil ini bisa membuatmu tersenyum hari ini.
+      </p>
+
+      <button class="primary-button" id="finalButton" type="button">
+        Buka Pesan Terakhir ♡
+      </button>
+    </section>
+  </main>
+
+  <footer>
+    MADE WITH LOVE, JUST FOR MY ENJEL SAYANGG
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <audio id="music" src="music.mp3" loop preload="auto"></audio>
+
+  <script>
+    const music = document.getElementById("music");
+    const musicButton = document.getElementById("musicButton");
+    const musicLabel = document.getElementById("musicLabel");
+    const letter = document.getElementById("loveLetter");
+    const letterButton = document.getElementById("letterButton");
+    const toast = document.getElementById("toast");
+
+    let toastTimer;
+
+    // Coba memutar musik otomatis saat halaman dibuka.
+    // Browser mungkin memblokir audio yang memiliki suara.
+    async function tryAutoplay() {
+      try {
+        music.volume = 0.45;
+        await music.play();
+        setMusicState(true);
+      } catch (error) {
+        setMusicState(false);
+        musicLabel.textContent = "Aktifkan Musik";
+      }
+    }
+
+    function setMusicState(isPlaying) {
+      musicButton.classList.toggle("playing", isPlaying);
+      musicLabel.textContent = isPlaying ? "Jeda Musik" : "Putar Musik";
+      musicButton.setAttribute("aria-pressed", String(isPlaying));
+    }
+
+    async function toggleMusic() {
+      if (music.paused) {
+        try {
+          await music.play();
+          setMusicState(true);
+        } catch (error) {
+          showToast("Musik belum bisa diputar. Pastikan file music.mp3 tersedia.");
+        }
+      } else {
+        music.pause();
+        setMusicState(false);
+      }
+    }
+
+    musicButton.addEventListener("click", toggleMusic);
+
+    // Coba mengaktifkan musik lagi setelah interaksi pertama.
+    // Ini membantu pada browser yang mengizinkan audio setelah klik.
+    function firstInteraction() {
+      if (music.paused) {
+        music.play()
+          .then(() => setMusicState(true))
+          .catch(() => {});
+      }
+
+      document.removeEventListener("click", firstInteraction);
+      document.removeEventListener("keydown", firstInteraction);
+    }
+
+    document.addEventListener("click", firstInteraction);
+    document.addEventListener("keydown", firstInteraction);
+
+    document.getElementById("startButton").addEventListener("click", () => {
+      document.getElementById("story").scrollIntoView({
+        behavior: "smooth"
+      });
+    });
+
+    function toggleLetter() {
+      const isOpen = letter.classList.toggle("show");
+
+      letterButton.textContent = isOpen ? "Tutup Surat" : "Buka Surat ♡";
+      letterButton.setAttribute("aria-expanded", String(isOpen));
+
+      if (isOpen) {
+        createHearts(7);
+
+        setTimeout(() => {
+          letter.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest"
+          });
+        }, 100);
+      }
+    }
+
+    letterButton.addEventListener("click", toggleLetter);
+
+    document.getElementById("surpriseButton").addEventListener("click", () => {
+      showToast("Enjel Sayangg, semoga hari ini kamu ingat betapa berharganya dirimu. ♡");
+      createHearts(10);
+    });
+
+    document.getElementById("finalButton").addEventListener("click", () => {
+      showToast("Aku sayang kamu, Enjel. Terima kasih sudah menjadi bagian dari ceritaku. ♡");
+      createHearts(18);
+    });
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 4200);
+    }
+
+    function createHearts(amount) {
+      const symbols = ["♡", "♥"];
+
+      for (let i = 0; i < amount; i++) {
+        const heart = document.createElement("span");
+        heart.className = "floating-heart";
+        heart.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.fontSize = (14 + Math.random() * 18) + "px";
+        heart.style.animationDuration = (3.5 + Math.random() * 2) + "s";
+
+        document.body.appendChild(heart);
+        heart.addEventListener("animationend", () => heart.remove());
+      }
+    }
+
+    // Jalankan percobaan autoplay setelah halaman dimuat.
+    window.addEventListener("load", tryAutoplay);
+  </script>
+</body>
+</html>
